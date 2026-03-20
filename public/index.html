@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whats Gohan plus</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Pantalla de Login -->
+        <div id="login-screen" class="screen">
+            <div class="header">
+                <h1>Whats Gohan plus</h1>
+            </div>
+            <div class="content">
+                <p>Por favor, confirma tu código de país e introduce tu número de teléfono.</p>
+                <div class="input-group">
+                    <input type="text" id="country-code" placeholder="+52" value="+52">
+                    <input type="tel" id="phone-number" placeholder="Tu número de teléfono">
+                </div>
+                <button id="login-btn">Siguiente</button>
+            </div>
+        </div>
+
+        <!-- Pantalla de Verificación SMS -->
+        <div id="sms-screen" class="screen hidden">
+            <div class="header">
+                <h1>Verifica tu número</h1>
+            </div>
+            <div class="content">
+                <p>Hemos enviado un SMS con un código al número <span id="display-number"></span>.</p>
+                <div class="otp-inputs">
+                    <input type="text" maxlength="1" class="otp-input">
+                    <input type="text" maxlength="1" class="otp-input">
+                    <input type="text" maxlength="1" class="otp-input">
+                    <input type="text" maxlength="1" class="otp-input">
+                    <input type="text" maxlength="1" class="otp-input">
+                    <input type="text" maxlength="1" class="otp-input">
+                </div>
+                <p class="resend-text">¿No recibiste el código? <span>Reenviar SMS</span></p>
+                <button id="verify-btn">Verificar</button>
+            </div>
+        </div>
+
+        <!-- Pantalla de Ventana de Chats -->
+        <div id="chat-screen" class="screen hidden">
+            <div class="chat-sidebar">
+                <div class="sidebar-header">
+                    <div class="user-avatar"></div>
+                    <div class="sidebar-actions">
+                        <span>New</span>
+                        <span>Menu</span>
+                    </div>
+                </div>
+                <div class="search-bar">
+                    <input type="text" placeholder="Busca un chat o inicia uno nuevo">
+                </div>
+                <div class="chat-list">
+                    <div class="chat-item active">
+                        <div class="avatar"></div>
+                        <div class="chat-info">
+                            <div class="chat-name">Gohan</div>
+                            <div class="last-msg">¡Hola! Bienvenido a Whats Gohan plus.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="chat-window">
+                <div class="window-header">
+                    <div class="avatar"></div>
+                    <div class="contact-info">
+                        <div class="contact-name">Gohan</div>
+                        <div class="contact-status">en línea</div>
+                    </div>
+                </div>
+                <div id="messages" class="messages-container">
+                    <div class="message received">
+                        <div class="text">¡Hola! Bienvenido a Whats Gohan plus. ¿En qué puedo ayudarte hoy?</div>
+                        <div class="time">10:00</div>
+                    </div>
+                </div>
+                <div class="window-footer">
+                    <input type="text" id="msg-input" placeholder="Escribe un mensaje aquí">
+                    <button id="send-btn">Enviar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
