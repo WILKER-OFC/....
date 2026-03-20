@@ -1,0 +1,26 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: Arial, sans-serif; background-color: #f0f2f5; height: 100vh; display: flex; justify-content: center; align-items: center; }
+#app { width: 100%; height: 100%; background-color: #fff; display: flex; flex-direction: column; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+.screen { flex: 1; display: flex; flex-direction: column; }
+.hidden { display: none !important; }
+.header { background-color: #075e54; color: #fff; padding: 20px; text-align: center; }
+.content { padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; }
+.input-group { margin-top: 20px; display: flex; gap: 10px; width: 100%; max-width: 300px; }
+input { padding: 10px; border: 1px solid #ccc; border-radius: 4px; }
+#country-code { width: 60px; }
+#phone-number { flex: 1; }
+button { margin-top: 20px; padding: 10px 20px; background-color: #25d366; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+button:hover { background-color: #128c7e; }
+.otp-inputs { display: flex; gap: 10px; margin-top: 20px; }
+.otp-input { width: 30px; text-align: center; }
+#chat-screen { display: flex; flex-direction: row; height: 100%; }
+.chat-sidebar { width: 30%; background-color: #f0f2f5; border-right: 1px solid #ddd; display: flex; flex-direction: column; }
+.chat-window { flex: 1; display: flex; flex-direction: column; background-color: #e5ddd5; background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); }
+.window-header { background-color: #ededed; padding: 10px 16px; display: flex; align-items: center; border-bottom: 1px solid #ddd; }
+.messages-container { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; }
+.message { max-width: 60%; padding: 8px 12px; border-radius: 8px; margin-bottom: 10px; font-size: 14px; position: relative; }
+.received { background-color: #fff; align-self: flex-start; }
+.sent { background-color: #dcf8c6; align-self: flex-end; }
+.window-footer { background-color: #f0f0f0; padding: 10px 16px; display: flex; align-items: center; }
+.window-footer input { flex: 1; border-radius: 20px; border: none; padding: 10px 15px; margin-right: 10px; }
+@media (max-width: 768px) { .chat-sidebar { display: none; } }
