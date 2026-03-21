@@ -5,31 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Whats Gohan plus</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Socket.io -->
+    <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
     <div id="app">
         <!-- Pantalla de Login -->
         <div id="login-screen" class="screen">
-            <div class="header">
+            <div class="login-header">
+                <div class="login-logo">
+                    <svg viewBox="0 0 24 24" width="60" height="60" fill="white">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                    </svg>
+                </div>
                 <h1>Whats Gohan plus</h1>
             </div>
             <div class="content">
-                <p>Por favor, confirma tu código de país e introduce tu número de teléfono.</p>
+                <p>Bienvenido a Whats Gohan plus. Introduce tu número de teléfono para comenzar.</p>
                 <div class="input-group">
-                    <input type="text" id="country-code" placeholder="+52" value="+52">
-                    <input type="tel" id="phone-number" placeholder="Tu número de teléfono">
+                    <input type="text" id="country-code" value="+52">
+                    <input type="tel" id="phone-number" placeholder="Tu número">
                 </div>
-                <button id="login-btn">Siguiente</button>
+                <button id="login-btn">SIGUIENTE</button>
             </div>
         </div>
 
         <!-- Pantalla de Verificación SMS -->
         <div id="sms-screen" class="screen hidden">
-            <div class="header">
-                <h1>Verifica tu número</h1>
+            <div class="login-header">
+                <h1>Verificación</h1>
             </div>
             <div class="content">
-                <p>Hemos enviado un SMS con un código al número <span id="display-number"></span>.</p>
+                <p>Código enviado al <span id="display-number"></span></p>
                 <div class="otp-inputs">
                     <input type="text" maxlength="1" class="otp-input">
                     <input type="text" maxlength="1" class="otp-input">
@@ -38,51 +45,74 @@
                     <input type="text" maxlength="1" class="otp-input">
                     <input type="text" maxlength="1" class="otp-input">
                 </div>
-                <p class="resend-text">¿No recibiste el código? <span>Reenviar SMS</span></p>
-                <button id="verify-btn">Verificar</button>
+                <button id="verify-btn">VERIFICAR</button>
             </div>
         </div>
 
-        <!-- Pantalla de Ventana de Chats -->
+        <!-- Pantalla Principal de Chats -->
         <div id="chat-screen" class="screen hidden">
             <div class="chat-sidebar">
                 <div class="sidebar-header">
-                    <div class="user-avatar"></div>
+                    <div class="user-avatar">
+                        <img src="https://i.pravatar.cc/100?u=me" alt="Me">
+                    </div>
                     <div class="sidebar-actions">
-                        <span>New</span>
-                        <span>Menu</span>
+                         <svg viewBox="0 0 24 24" width="24" height="24" fill="#54656f"><path d="M12 20.664a9.163 9.163 0 0 1-6.521-2.702.977.977 0 0 1 1.381-1.381 7.21 7.21 0 1 0 0-10.163.977.977 0 1 1-1.381-1.381A9.164 9.164 0 1 1 12 20.664zm-1.125-9.223a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0z"/></svg>
+                         <svg viewBox="0 0 24 24" width="24" height="24" fill="#54656f"><path d="M19.005 3.175H4.674C3.642 3.175 2.8 4.017 2.8 5.049V19.01a1.874 1.874 0 0 0 3.197 1.325l2.67-2.671h10.338c1.033 0 1.875-.842 1.875-1.875V5.049c0-1.032-.842-1.874-1.875-1.874z"/></svg>
+                         <svg viewBox="0 0 24 24" width="24" height="24" fill="#54656f"><path d="M12 7a2 2 0 1 0-.001-4.001A2 2 0 0 0 12 7zm0 2a2 2 0 1 0-.001 3.999A2 2 0 0 0 12 9zm0 6a2 2 0 1 0-.001 3.999A2 2 0 0 0 12 15z"/></svg>
                     </div>
                 </div>
                 <div class="search-bar">
-                    <input type="text" placeholder="Busca un chat o inicia uno nuevo">
+                    <div class="search-container">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="#54656f"><path d="M15.009 13.805h-.636l-.22-.219a5.184 5.184 0 0 0 1.256-3.386 5.2 5.2 0 1 0-5.2 5.2 5.184 5.184 0 0 0 3.386-1.256l.22.219v.636l4.013 4.003 1.194-1.194-4.013-4.003zm-4.809 0a3.605 3.605 0 1 1 0-7.21 3.605 3.605 0 0 1 0 7.21z"/></svg>
+                        <input type="text" placeholder="Busca un chat o inicia uno nuevo">
+                    </div>
                 </div>
-                <div class="chat-list">
+                <div class="chat-list" id="chat-list">
                     <div class="chat-item active">
-                        <div class="avatar"></div>
-                        <div class="chat-info">
-                            <div class="chat-name">Gohan</div>
-                            <div class="last-msg">¡Hola! Bienvenido a Whats Gohan plus.</div>
+                        <div class="avatar">
+                             <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Gohan" alt="Gohan">
+                        </div>
+                        <div class="chat-details">
+                            <div class="chat-row">
+                                <div class="chat-name">Gohan</div>
+                                <div class="chat-time">10:00</div>
+                            </div>
+                            <div class="chat-row">
+                                <div class="chat-msg">¡Hola! Bienvenido a Whats Gohan plus.</div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="chat-window">
                 <div class="window-header">
-                    <div class="avatar"></div>
+                    <div class="avatar">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Gohan" alt="Gohan">
+                    </div>
                     <div class="contact-info">
                         <div class="contact-name">Gohan</div>
                         <div class="contact-status">en línea</div>
                     </div>
-                </div>
-                <div id="messages" class="messages-container">
-                    <div class="message received">
-                        <div class="text">¡Hola! Bienvenido a Whats Gohan plus. ¿En qué puedo ayudarte hoy?</div>
-                        <div class="time">10:00</div>
+                    <div class="window-actions">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="#54656f"><path d="M15.009 13.805h-.636l-.22-.219a5.184 5.184 0 0 0 1.256-3.386 5.2 5.2 0 1 0-5.2 5.2 5.184 5.184 0 0 0 3.386-1.256l.22.219v.636l4.013 4.003 1.194-1.194-4.013-4.003zm-4.809 0a3.605 3.605 0 1 1 0-7.21 3.605 3.605 0 0 1 0 7.21z"/></svg>
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="#54656f"><path d="M12 7a2 2 0 1 0-.001-4.001A2 2 0 0 0 12 7zm0 2a2 2 0 1 0-.001 3.999A2 2 0 0 0 12 9zm0 6a2 2 0 1 0-.001 3.999A2 2 0 0 0 12 15z"/></svg>
                     </div>
                 </div>
+                <div id="messages" class="messages-container">
+                    <!-- Los mensajes aparecerán aquí -->
+                </div>
                 <div class="window-footer">
+                    <div class="icon-btn">
+                         <svg viewBox="0 0 24 24" width="24" height="24" fill="#54656f"><path d="M12 7c2.21 0 4 1.79 4 4s-1.79 4-4 4-4-1.79-4-4 1.79-4 4-4zm0-5c5.52 0 10 4.48 10 10s-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2zM7.07 18.28c.43.9 1.28 1.54 2.27 1.72 1.5.28 3.16-.27 4.19-1.39l.21-.24c.3-.39.46-.86.46-1.37 0-1.31-1.07-2.38-2.38-2.38H9.82c-.85 0-1.6.46-2 1.14l-.1.17c-.36.63-.52 1.34-.65 2.35zM17.41 12.3c0-1.3-.34-2.52-.94-3.57C15.35 7.04 13.78 6 12 6s-3.35 1.04-4.47 2.73c-.6 1.05-.94 2.27-.94 3.57 0 1.3.34 2.52.94 3.57C8.65 17.56 10.22 18.6 12 18.6s3.35-1.04 4.47-2.73c.6-1.05.94-2.27.94-3.57z"/></svg>
+                    </div>
+                    <div class="icon-btn">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="#54656f"><path d="M1.816 15.556v.002c.459 1.632 1.588 2.946 3.138 3.671l5.97 2.822a1.203 1.203 0 0 0 1.046 0l5.971-2.822c1.55-.725 2.679-2.039 3.138-3.671v-.002c.464-1.644.247-3.414-.61-4.991l-2.821-5.185a1.203 1.203 0 0 0-1.047-.643H7.402a1.203 1.203 0 0 0-1.047.643l-2.82 5.184c-.858 1.578-1.075 3.348-.611 4.992z"/></svg>
+                    </div>
                     <input type="text" id="msg-input" placeholder="Escribe un mensaje aquí">
-                    <button id="send-btn">Enviar</button>
+                    <button id="send-btn">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="#54656f"><path d="M1.101 21.757L23.8 12.028 1.101 2.3l.011 7.912 13.623 1.816-13.623 1.817-.011 7.912z"/></svg>
+                    </button>
                 </div>
             </div>
         </div>
