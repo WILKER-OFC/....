@@ -1,0 +1,15 @@
+{
+  "users": [
+    {
+      "id": 1774154388940,
+      "username": "testuser",
+      "email": "test@example.com",
+      "password": "$2b$10$zONIDbedjA9oerBnY/UgVO7Ncckj02Q5WP16DAZJVJX/krkJK.R/O",
+      "apiKey": "f466f6a4fefce7e7d5bef7b48b31f1e4",
+      "verified": true,
+      "verificationToken": "194983f8976e0a23ff229d603ba4fd7380a3280c5daae449cac23470023cb26d",
+      "usage": 1,
+      "createdAt": "2026-03-22T04:39:48.940Z"
+    }
+  ]
+}
