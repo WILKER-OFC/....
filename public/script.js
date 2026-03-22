@@ -1,100 +1,137 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // Socket.io initialization
-    const socket = io();
+let currentToken = localStorage.getItem('token');
+let currentApiKey = localStorage.getItem('apiKey');
+let currentUsername = localStorage.getItem('username');
 
-    const loginScreen = document.getElementById('login-screen');
-    const smsScreen = document.getElementById('sms-screen');
-    const chatScreen = document.getElementById('chat-screen');
-    const loginBtn = document.getElementById('login-btn');
-    const verifyBtn = document.getElementById('verify-btn');
-    const sendBtn = document.getElementById('send-btn');
-    const msgInput = document.getElementById('msg-input');
-    const messagesContainer = document.getElementById('messages');
-    const otpInputs = document.querySelectorAll('.otp-input');
-    const chatList = document.getElementById('chat-list');
+function showSection(sectionId) {
+    document.getElementById('login-section').style.display = 'none';
+    document.getElementById('register-section').style.display = 'none';
+    document.getElementById('forgot-password-section').style.display = 'none';
+    document.getElementById('dashboard-section').style.display = 'none';
 
-    let currentUser = '';
+    document.getElementById(sectionId + '-section').style.display = 'block';
 
-    loginBtn.addEventListener('click', () => {
-        const country = document.getElementById('country-code').value;
-        const phone = document.getElementById('phone-number').value.trim();
-        if (!phone) return alert('Por favor, ingresa tu número');
+    if (sectionId === 'dashboard') {
+        fetchProfile();
+    }
+}
 
-        currentUser = country + phone;
-        document.getElementById('display-number').textContent = currentUser;
-        loginScreen.classList.add('hidden');
-        smsScreen.classList.remove('hidden');
-    });
+async function register() {
+    const username = document.getElementById('reg-username').value;
+    const email = document.getElementById('reg-email').value;
+    const password = document.getElementById('reg-password').value;
 
-    otpInputs.forEach((input, i) => {
-        input.addEventListener('input', () => {
-            if (input.value && i < 5) otpInputs[i+1].focus();
+    try {
+        const res = await fetch('/auth/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, email, password })
         });
-        input.addEventListener('keydown', (e) => {
-            if (e.key === 'Backspace' && !input.value && i > 0) otpInputs[i-1].focus();
+        const data = await res.json();
+        alert(data.message);
+        if (data.status) showSection('login');
+    } catch (err) {
+        alert('Error en el registro');
+    }
+}
+
+async function login() {
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+
+    try {
+        const res = await fetch('/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
         });
-    });
+        const data = await res.json();
+        if (data.status) {
+            currentToken = data.token;
+            currentApiKey = data.apiKey;
+            currentUsername = data.username;
+            localStorage.setItem('token', currentToken);
+            localStorage.setItem('apiKey', currentApiKey);
+            localStorage.setItem('username', currentUsername);
+            updateNav();
+            showSection('dashboard');
+        } else {
+            alert(data.message);
+        }
+    } catch (err) {
+        alert('Error al iniciar sesión');
+    }
+}
 
-    verifyBtn.addEventListener('click', () => {
-        smsScreen.classList.add('hidden');
-        chatScreen.classList.remove('hidden');
-        // Register current user on socket
-        socket.emit('join', currentUser);
-    });
+function logout() {
+    localStorage.clear();
+    currentToken = null;
+    updateNav();
+    showSection('login');
+}
 
-    const addMessageToUI = (msg) => {
-        // Display message if it's sent by me OR it's from Gohan OR it's from someone else
-        // (For this demo, we see all messages)
-        const isSentByMe = msg.user === currentUser;
+function updateNav() {
+    if (currentToken) {
+        document.getElementById('auth-nav').style.display = 'none';
+        document.getElementById('user-nav').style.display = 'flex';
+        document.getElementById('welcome-msg').innerText = `Hola, ${currentUsername}`;
+    } else {
+        document.getElementById('auth-nav').style.display = 'flex';
+        document.getElementById('user-nav').style.display = 'none';
+    }
+}
 
-        const div = document.createElement('div');
-        div.className = \`message \${isSentByMe ? 'sent' : 'received'}\`;
-
-        div.innerHTML = \`
-            <div class="text">\${msg.text}</div>
-            <div class="time">\${msg.time}</div>
-        \`;
-
-        messagesContainer.appendChild(div);
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-        // Actualizar el último mensaje en la lista de chats
-        const lastMsgEl = chatList.querySelector('.chat-msg');
-        if (lastMsgEl) lastMsgEl.textContent = msg.text;
-        const timeEl = chatList.querySelector('.chat-time');
-        if (timeEl) timeEl.textContent = msg.time;
-    };
-
-    const sendMsg = () => {
-        const text = msgInput.value.trim();
-        if (!text) return;
-
-        const msgData = {
-            user: currentUser,
-            text: text,
-            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        };
-
-        socket.emit('chat message', msgData);
-        msgInput.value = '';
-    };
-
-    socket.on('chat message', (msg) => {
-        addMessageToUI(msg);
-    });
-
-    sendBtn.addEventListener('click', sendMsg);
-    msgInput.addEventListener('keypress', (e) => {
-        if(e.key === 'Enter') sendMsg();
-    });
-
-    // Handle responsive chat view (simple toggle)
-    const chatItems = document.querySelectorAll('.chat-item');
-    chatItems.forEach(item => {
-        item.addEventListener('click', () => {
-            if (window.innerWidth <= 768) {
-                chatScreen.classList.add('show-chat');
-            }
+async function fetchProfile() {
+    try {
+        const res = await fetch('/api/profile', {
+            headers: { 'Authorization': `Bearer ${currentToken}` }
         });
-    });
-});
+        const data = await res.json();
+        if (data.status) {
+            document.getElementById('user-apikey').innerText = data.profile.apiKey;
+            document.getElementById('user-usage').innerText = data.profile.usage;
+        }
+    } catch (err) {
+        console.error('Error fetching profile');
+    }
+}
+
+async function rotateApiKey() {
+    if (!confirm('¿Estás seguro de que quieres cambiar tu API KEY?')) return;
+
+    try {
+        const res = await fetch('/api/rotate-key', {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+        const data = await res.json();
+        if (data.status) {
+            alert(data.message);
+            fetchProfile();
+        }
+    } catch (err) {
+        alert('Error al rotar API KEY');
+    }
+}
+
+async function forgotPassword() {
+    const email = document.getElementById('forgot-email').value;
+    try {
+        const res = await fetch('/auth/forgot-password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+        });
+        const data = await res.json();
+        alert(data.message);
+    } catch (err) {
+        alert('Error al procesar solicitud');
+    }
+}
+
+// Initial state
+if (currentToken) {
+    updateNav();
+    showSection('dashboard');
+} else {
+    updateNav();
+}

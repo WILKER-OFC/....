@@ -1,61 +1,32 @@
 const express = require('express');
 const path = require('path');
 const http = require('http');
-const { Server } = require('socket.io');
+const cors = require('cors');
+require('dotenv').config();
+
+const authRoutes = require('./routes/authRoutes');
+const apiRoutes = require('./routes/apiRoutes');
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
 
 const PORT = process.env.PORT || 3000;
 
+// Middleware global
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Store connected users: socketId -> username
-const users = {};
+// Rutas
+app.use('/auth', authRoutes);
+app.use('/api', apiRoutes);
 
-io.on('connection', (socket) => {
-  console.log('Un usuario se ha conectado:', socket.id);
-
-  socket.on('join', (username) => {
-    users[socket.id] = username;
-    console.log(`\${username} se ha unido con ID \${socket.id}`);
-  });
-
-  socket.on('chat message', (msg) => {
-    console.log('Mensaje de ' + (users[socket.id] || 'Anónimo') + ': ' + msg.text);
-
-    // In a real app, we'd use msg.to for private messages.
-    // For this prototype, we'll keep broadcasting but including the sender.
-    io.emit('chat message', {
-        ...msg,
-        user: users[socket.id] || msg.user
-    });
-
-    // Respuesta automática de Gohan (solo si el mensaje no es de Gohan)
-    if (users[socket.id] !== 'Gohan' && msg.user !== 'Gohan') {
-      setTimeout(() => {
-          const reply = {
-              user: 'Gohan',
-              text: `¡Hola \${users[socket.id] || 'amigo'}! Soy Gohan. Recibí tu mensaje: "\${msg.text}"`,
-              time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-              isBot: true
-          };
-          io.emit('chat message', reply);
-      }, 1500);
-    }
-  });
-
-  socket.on('disconnect', () => {
-    console.log('Usuario desconectado:', users[socket.id]);
-    delete users[socket.id];
-  });
-});
-
+// Manejo de errores 404
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 server.listen(PORT, () => {
-  console.log(`Whats Gohan plus funcionando en el puerto \${PORT}`);
+    console.log(`Api Gohan funcionando en el puerto ${PORT}`);
 });
