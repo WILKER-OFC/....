@@ -1,41 +1,42 @@
-# Api Gohan 馃惒
+# Bardot Bot 馃惒
 
-Una API robusta con sistema de registro, verificaci贸n de correo electr贸nico v铆a Gmail en tiempo real, gesti贸n de API Keys y endpoints tem谩ticos de Gohan.
+隆Hola! Bienvenido a **Bardot Bot**, un bot de WhatsApp f谩cil de usar, basado en la librer铆a `@whiskeysockets/baileys`.
 
 ## Caracter铆sticas
 
-- **Registro de Usuarios:** Con verificaci贸n de correo electr贸nico obligatoria.
-- **Seguridad:** Autenticaci贸n JWT y protecci贸n de endpoints con API Key.
-- **Recuperaci贸n de Contrase帽a:** Sistema de olvido de contrase帽a con env铆o de token a Gmail.
-- **Gesti贸n de API Key:** Cada usuario puede regenerar su propia API Key.
-- **Leaderboard:** Top de usuarios que m谩s utilizan la API.
-- **Uptime:** Monitoreo del tiempo de actividad del servidor.
-- **Endpoints Tem谩ticos:** Frases y datos curiosos sobre Gohan.
-- **Idioma:** Totalmente en Espa帽ol.
+- **F谩cil de instalar:** Configura y arranca en minutos.
+- **Sistema de Plugins:** A帽ade comandos f谩cilmente en la carpeta `plugins/`.
+- **C贸digo de Emparejamiento:** Con茅ctate sin necesidad de escanear el c贸digo QR.
+- **Auto-reinicio:** Si el bot falla, se reinicia autom谩ticamente.
 
-## Endpoints
+## Instalaci贸n
 
-### Autenticaci贸n (`/auth`)
-- `POST /auth/register` - Registrar nuevo usuario.
-- `GET /auth/verify/:token` - Verificar cuenta por correo.
-- `POST /auth/login` - Iniciar sesi贸n y obtener JWT.
-- `POST /auth/forgot-password` - Solicitar recuperaci贸n de contrase帽a.
-- `POST /auth/reset-password/:token` - Cambiar contrase帽a con token.
+1. Clona el repositorio (o descarga el zip).
+2. Instala las dependencias:
+   ```bash
+   npm install
+   ```
+3. Configura el bot en `config.js`:
+   - Cambia el n煤mero del owner.
+   - Ajusta el prefijo si lo deseas.
+4. Inicia el bot:
+   ```bash
+   npm start
+   ```
 
-### API (`/api`)
-- `GET /api/uptime` - Ver tiempo de actividad.
-- `GET /api/leaderboard` - Ver top usuarios (uso de API).
-- `GET /api/quote?apikey=TU_KEY` - Obtener frase aleatoria.
-- `GET /api/gohan-fact?apikey=TU_KEY` - Obtener dato curioso.
-- `PATCH /api/update-key` - Regenerar API Key (Requiere Bearer Token).
+## Comandos Disponibles
 
-## Instalaci贸n y Configuraci贸n
+- `.menu` - Muestra el men煤 principal.
+- `.ping` - Verifica la latencia del bot.
 
-1. Clona el repositorio.
-2. Instala las dependencias: `npm install`.
-3. Configura el archivo `.env` bas谩ndote en `.env.example`.
-4. Inicia el servidor: `npm start`.
+## Estructura del Proyecto
 
-## Despliegue en Render
+- `index.js`: Proceso maestro que monitorea el bot.
+- `main.js`: L贸gica de conexi贸n a WhatsApp.
+- `handler.js`: Manejador de mensajes y cargador de plugins.
+- `config.js`: Configuraciones generales.
+- `plugins/`: Carpeta donde se guardan los comandos.
 
-Esta API est谩 lista para ser desplegada en [Render](https://render.com/). Solo necesitas conectar tu repositorio y configurar las variables de entorno.
+## Cr茅ditos
+
+Creado por Bardot.
